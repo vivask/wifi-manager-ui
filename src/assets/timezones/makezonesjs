@@ -1,0 +1,12 @@
+#! /bin/bash
+echo "export const timeZones = [" > ./zones.js
+while IFS="," read -r rec_column1 rec_column2
+do
+  echo "{ name: $rec_column1, value: $rec_column2}," >> ./zones.js
+  echo "$rec_column1"
+  echo "$rec_column2"
+done < <(tail -n +2 zones.csv)
+echo "];" >> ./zones.js
+
+
+
