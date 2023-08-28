@@ -1,5 +1,3 @@
-# Vue 3 + Vite
-
 # Vue user interface for wifi manager
 
 This is the user interface for wifi manager, more can be seen here https://github.com/vivask/wifi-manager
