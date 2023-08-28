@@ -10,7 +10,7 @@ This is the user interface for wifi manager, more can be seen here https://githu
 ~cd wifi-manager-ui
 ~npm install
 ~npm run dev    - for development
-~npm run build  - for development
+~npm run build  - for build
 ```
 
 The finished build must be copied to the wifi manager _dist_ folder:
