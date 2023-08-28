@@ -9,7 +9,7 @@ This is the user interface for wifi manager, more can be seen here https://githu
 ```sh
 ~cd /tmp
 ~git clone https://github.com/vivask/wifi-manager-ui.git
-~cd Meteo.Ui
+~cd wifi-manager-ui
 ~npm install
 ~npm run dev    - for development
 ~npm run build  - for development
