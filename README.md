@@ -11,13 +11,13 @@ This is the user interface for wifi manager, more can be seen here https://githu
 ~git clone https://github.com/vivask/wifi-manager-ui.git
 ~cd Meteo.Ui
 ~npm install
-~npm run dev - for development
-~./build - for build
+~npm run dev    - for development
+~npm run build  - for development
 ```
 
 The finished build must be copied to the wifi manager _dist_ folder:
 
 ```sh
-rm -rf wifi-manager/components/wifi-manager/dist
-cp wifi-manager-ui/components/wifi-manager/dist wifi-manager/components/wifi-manager/dist
+~rm -rf wifi-manager/components/wifi-manager/dist
+~cp wifi-manager-ui/components/wifi-manager/dist wifi-manager/components/wifi-manager/dist
 ```
