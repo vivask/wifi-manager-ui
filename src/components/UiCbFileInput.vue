@@ -69,7 +69,7 @@ export default {
 
     const isError = computed(() => props.errors.length > 0);
 
-    const id = crypto.randomUUID();
+    const id = 'id' + Math.random().toString(16).slice(2);
 
     return {
       file,
