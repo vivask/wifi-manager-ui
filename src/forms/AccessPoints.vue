@@ -52,19 +52,24 @@ export default defineComponent({
       emit('next-page');
     };
 
+    const accessPoinst = (answer) => {
+      answer.value = false;
+      GetAccessPoints()
+        .then((result) => {
+          ssids.value = result;
+        })
+        .finally(() => {
+          answer.value = true;
+        });
+    };
+
     onMounted(() => {
+      accessPoinst(answer);
       setInterval(() => {
         if (answer.value) {
-          answer.value = false;
-          GetAccessPoints()
-            .then((result) => {
-              ssids.value = result;
-            })
-            .finally(() => {
-              answer.value = true;
-            });
+          accessPoinst(answer);
         }
-      }, 1000);
+      }, 3800);
     });
 
     return {
@@ -139,7 +144,7 @@ export default defineComponent({
   line-height: 28px;
   color: #4c6bb6;
   text-align: left;
-  border-radius: 10px;
+  /* border-radius: 10px; */
   border: 4px;
   transition: 0.2s all;
   outline: none;

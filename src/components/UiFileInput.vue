@@ -50,15 +50,10 @@ export default {
       width: props.labelWidth,
       isError,
 
-      handleChange(event) {
-        const reader = new FileReader();
-        reader.readAsText(event.target.files[0]);
-        reader.onload = () => {
-          emit('update:modelValue', reader.result);
-        };
-        reader.onerror = function () {
-          useToast().error(reader.error, { timeout: 5000 });
-        };
+      async handleChange(event) {
+        const file = event.target.files[0];
+        const cert = file ? await file.text() : '';
+        emit('update:modelValue', cert);
       },
     };
   },

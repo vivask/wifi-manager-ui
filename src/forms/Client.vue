@@ -11,10 +11,17 @@
       <ui-input v-model="v$.server_api.$model" label="Server API" :errors="v$.server_api.$errors" />
 
       <ui-cb-input
-        v-model="v$.ota_api.$model"
-        v-model:checkedValue="useOTA"
-        label="OTA json key"
-        :errors="v$.ota_api.$errors"
+        v-model="v$.esp_json_key.$model"
+        v-model:checkedValue="useEspOTA"
+        label="ESP json key"
+        :errors="v$.esp_json_key.$errors"
+      />
+
+      <ui-cb-input
+        v-model="v$.stm_json_key.$model"
+        v-model:checkedValue="useStmOTA"
+        label="STM json key"
+        :errors="v$.stm_json_key.$errors"
       />
 
       <ui-select
@@ -98,7 +105,9 @@ export default defineComponent({
 
     const ssl = computed(() => modelProxy.value.server_auth === 'ssl');
 
-    const useOTA = ref(true);
+    const useEspOTA = ref(true);
+
+    const useStmOTA = ref(true);
 
     const rules = computed(() => {
       const localRules = {
@@ -106,10 +115,16 @@ export default defineComponent({
         server_port: { required, numeric: numeric },
         server_api: { required },
         server_auth: { required },
-        ota_api: {
+        esp_json_key: {
           required: helpers.withMessage(
             'Value is required',
-            () => !useOTA.value || (useOTA.value && v$.value.ota_api.$model.length),
+            () => !useEspOTA.value || (useEspOTA.value && v$.value.esp_json_key.$model.length),
+          ),
+        },
+        stm_json_key: {
+          required: helpers.withMessage(
+            'Value is required',
+            () => !useStmOTA.value || (useStmOTA.value && v$.value.stm_json_key.$model.length),
           ),
         },
       };
@@ -152,7 +167,8 @@ export default defineComponent({
       methods,
       basic,
       ssl,
-      useOTA,
+      useEspOTA,
+      useStmOTA,
     };
   },
 });

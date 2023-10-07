@@ -5,161 +5,25 @@ import { httpClient } from './httpClient';
  * @param data
  * @return true if esp32 configuration success
  */
-export async function createSetup(wifiData, wifiCa, wifiCrt, wifiKey, ipv4Data, httpData, httpCa, httpCrt, httpKey) {
-  // console.log('WIFI Size:', JSON.stringify(wifiData).length);
-  // console.log('WIFI obj:', wifiData);
-  // console.log('WIFI CA:', wifiCa);
-  // console.log('WIFI CRT:', wifiCrt);
-  // console.log('WIFI KEY:', wifiKey);
-  // console.log('IPV4 obj:', ipv4Data);
-  // console.log('HTTP obj:', httpData);
-  // console.log('HTTP CA:', httpCa);
-  // console.log('HTTP CRT:', httpCrt);
-  // console.log('HTTP KEY:', httpKey);
-
-  try {
-    const { success } = await httpClient.post('/setup/wifi', wifiData);
-    return {
-      success: success,
-      message: success
-        ? (await wifiCaSetup(wifiCa, wifiCrt, wifiKey, ipv4Data, httpData, httpCa, httpCrt, httpKey)).message
-        : null,
-    };
-  } catch {
-    return { success: false, message: null };
+export async function createSetup(setup) {
+  for (const [key, value] of Object.entries(setup)) {
+    const url = '/setup/' + `${key}`;
+    const { success, result } = await httpClient.post(url, value);
+    if (!success) {
+      return { success: success, message: result.message };
+    }
   }
+  return { success: true, message: null };
 }
 
 /**
- * Post esp32 settings
+ * Post esp32 connect after settings
  * @param data
- * @return true if esp32 configuration success
+ * @return true if command send success
  */
-async function wifiCaSetup(wifiCa, wifiCrt, wifiKey, ipv4Data, httpData, httpCa, httpCrt, httpKey) {
+export async function Connect() {
   try {
-    const { success } = await httpClient.post('/setup/wifi/ca', wifiCa);
-    return {
-      success: success,
-      message: success
-        ? (await wifiCrtSetup(wifiCrt, wifiKey, ipv4Data, httpData, httpCa, httpCrt, httpKey)).message
-        : null,
-    };
-  } catch {
-    return { success: false, message: null };
-  }
-}
-
-/**
- * Post esp32 settings
- * @param data
- * @return true if esp32 configuration success
- */
-async function wifiCrtSetup(wifiCrt, wifiKey, ipv4Data, httpData, httpCa, httpCrt, httpKey) {
-  try {
-    const { success } = await httpClient.post('/setup/wifi/crt', wifiCrt);
-    return {
-      success: success,
-      message: success ? (await wifiKeySetup(wifiKey, ipv4Data, httpData, httpCa, httpCrt, httpKey)).message : null,
-    };
-  } catch {
-    return { success: false, message: null };
-  }
-}
-
-/**
- * Post esp32 settings
- * @param data
- * @return true if esp32 configuration success
- */
-async function wifiKeySetup(wifiKey, ipv4Data, httpData, httpCa, httpCrt, httpKey) {
-  try {
-    const { success } = await httpClient.post('/setup/wifi/key', wifiKey);
-    return {
-      success: success,
-      message: success ? (await ipv4Setup(ipv4Data, httpData, httpCa, httpCrt, httpKey)).message : null,
-    };
-  } catch {
-    return { success: false, message: null };
-  }
-}
-
-/**
- * Post esp32 settings
- * @param data
- * @return true if esp32 configuration success
- */
-async function ipv4Setup(ipv4Data, httpData, httpCa, httpCrt, httpKey) {
-  try {
-    const { success } = await httpClient.post('/setup/ipv4', ipv4Data);
-    return {
-      success: success,
-      message: success ? (await httpSetup(httpData, httpCa, httpCrt, httpKey)).message : null,
-    };
-  } catch {
-    return { success: false, message: null };
-  }
-}
-
-/**
- * Post esp32 settings
- * @param data
- * @return true if esp32 configuration success
- */
-async function httpSetup(httpData, httpCa, httpCrt, httpKey) {
-  try {
-    //console.log(httpData);
-    const { success } = await httpClient.post('/setup/http', httpData);
-    return {
-      success: success,
-      message: success ? (await httpCaSetup(httpCa, httpCrt, httpKey)).message : null,
-    };
-  } catch {
-    return { success: false, message: null };
-  }
-}
-
-/**
- * Post esp32 settings
- * @param data
- * @return true if esp32 configuration success
- */
-async function httpCaSetup(httpCa, httpCrt, httpKey) {
-  try {
-    const { success } = await httpClient.post('/setup/http/ca', httpCa);
-    return {
-      success: success,
-      message: success ? (await httpCrtSetup(httpCrt, httpKey)).message : null,
-    };
-  } catch {
-    return { success: false, message: null };
-  }
-}
-
-/**
- * Post esp32 settings
- * @param data
- * @return true if esp32 configuration success
- */
-async function httpCrtSetup(httpCrt, httpKey) {
-  try {
-    const { success } = await httpClient.post('/setup/http/crt', httpCrt);
-    return {
-      success: success,
-      message: success ? (await httpKeySetup(httpKey)).message : null,
-    };
-  } catch {
-    return { success: false, message: null };
-  }
-}
-
-/**
- * Post esp32 settings
- * @param data
- * @return true if esp32 configuration success
- */
-async function httpKeySetup(httpKey) {
-  try {
-    const { success, result } = await httpClient.post('/setup/http/key', httpKey);
+    const { success, result } = await httpClient.get('/connect');
     return { success: success, message: result.message };
   } catch {
     return { success: false, message: null };

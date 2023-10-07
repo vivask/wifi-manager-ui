@@ -1,8 +1,8 @@
 <template>
   <div class="cb-group" style="margin-top: 10px">
     <div v-if="label && label.length !== 0" class="cb-check wd-label">
-      <input id="cb" type="checkbox" v-model="localChecked" v-bind="$attrs" @change="handleToggle" />
-      <label for="cb" style="margin-left: 2px">{{ label }}</label>
+      <input :id="id" type="checkbox" v-model="localChecked" v-bind="$attrs" @change="handleToggle" />
+      <label :for="id" style="margin-left: 2px">{{ label }}</label>
     </div>
     <div v-else class="cb-check">
       <input type="checkbox" v-model="localChecked" v-bind="$attrs" />
@@ -69,26 +69,24 @@ export default {
 
     const isError = computed(() => props.errors.length > 0);
 
+    const id = crypto.randomUUID();
+
     return {
       file,
       localChecked,
       isError,
       margin: props.marginTop,
       width: props.labelWidth,
+      id,
 
       updateInput(event) {
         emit('update:modelValue', event.target.value);
       },
 
-      handleChange(event) {
-        const reader = new FileReader();
-        reader.readAsText(event.target.files[0]);
-        reader.onload = () => {
-          emit('update:modelValue', reader.result);
-        };
-        reader.onerror = function () {
-          useToast().error(reader.error, { timeout: 5000 });
-        };
+      async handleChange(event) {
+        const file = event.target.files[0];
+        const cert = file ? await file.text() : '';
+        emit('update:modelValue', cert);
       },
 
       handleToggle(event) {

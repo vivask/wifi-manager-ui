@@ -28,7 +28,7 @@
 <script>
 import { defineComponent, ref, computed } from 'vue';
 import { useToast } from 'vue-toastification';
-import { createSetup } from './api/appApi';
+import { createSetup, Connect } from './api/appApi';
 import UiContainer from './components/UiContainer.vue';
 import Steppy from './components/Vue3Steppy.vue';
 import AccessPoints from './forms/AccessPoints.vue';
@@ -102,7 +102,8 @@ export default defineComponent({
       server_address: '',
       server_port: null,
       server_api: '',
-      ota_api: '',
+      esp_json_key: '',
+      stm_json_key: '',
       server_auth: '',
       client_username: '',
       client_password: '',
@@ -148,29 +149,39 @@ export default defineComponent({
           server_address: state.value.server_address,
           server_port: parseInt(state.value.server_port),
           server_api: state.value.server_api,
-          ota_api: state.value.ota_api,
+          esp_json_key: state.value.esp_json_key,
+          stm_json_key: state.value.stm_json_key,
           server_auth: state.value.server_auth,
           client_username: state.value.client_username,
           client_password: state.value.client_password,
         };
 
-        createSetup(
-          wifiSetup,
-          { wifi_ca: state.value.wifi_ca },
-          { wifi_crt: state.value.wifi_crt },
-          { wifi_key: state.value.wifi_key },
-          ipv4Setup,
-          httpSetup,
-          { client_ca: state.value.client_ca },
-          { client_crt: state.value.client_crt },
-          { client_key: state.value.client_key },
-        ).then(({ success }) => {
-          loading.value = false;
+        const setup = {
+          'wifi/ca': JSON.stringify({ wifi_ca: state.value.wifi_ca }),
+          'wifi/crt': JSON.stringify({ wifi_crt: state.value.wifi_crt }),
+          'wifi/key': JSON.stringify({ wifi_key: state.value.wifi_key }),
+          'http/ca': JSON.stringify({ client_ca: state.value.client_ca }),
+          'http/crt': JSON.stringify({ client_crt: state.value.client_crt }),
+          'http/key': JSON.stringify({ client_key: state.value.client_key }),
+          wifi: JSON.stringify(wifiSetup),
+          ipv4: JSON.stringify(ipv4Setup),
+          http: JSON.stringify(httpSetup),
+        };
+
+        createSetup(setup).then(({ success, message }) => {
           if (success) {
-            useToast().success('Configuration success!', { timeout: 3000 });
+            Connect().then(({ success, message }) => {
+              if (success) {
+                useToast().success('Configuration success!', { timeout: 3000 });
+                step.value = 1;
+              } else {
+                useToast().error(message, { timeout: 5000 });
+              }
+            });
           } else {
-            useToast().error(error.message, { timeout: 5000 });
+            useToast().error(message, { timeout: 5000 });
           }
+          loading.value = false;
         });
       },
 
