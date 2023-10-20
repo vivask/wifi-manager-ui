@@ -8,7 +8,10 @@
       <button class="button-manual-ssid" @click="nextPage(null)">ADD (HIDDEN) SSID</button>
       <div>OR CHOOSE A NETWORK...</div>
       <div v-if="ssids.length === 0">
-        <small class="p-error">Not available access points found</small>
+        <div class="spin-gtoup">
+          <dot-loader color="orange" size="15px"></dot-loader>
+          <p class="spin-label">Search available access points...</p>
+        </div>
       </div>
       <ul v-else class="ssid-list">
         <li v-for="ssid in ssids" :key="ssid.ssid" class="ssid-list__item" v-on:click="nextPage(ssid)">
@@ -27,11 +30,12 @@
 import { defineComponent, ref, onMounted } from 'vue';
 import UiCard from '../components/UiCard.vue';
 import { GetAccessPoints } from '../api/fetchAccessPoints';
+import DotLoader from 'vue-spinner/src/DotLoader.vue';
 
 export default defineComponent({
   name: 'AccessPoints',
 
-  components: { UiCard },
+  components: { UiCard, DotLoader },
 
   props: {
     state: {
@@ -42,7 +46,7 @@ export default defineComponent({
 
   setup(props, { emit }) {
     const ssids = ref([]);
-    const answer = ref(true);
+    const loading = ref(false);
 
     const nextPage = (ssid) => {
       props.state.wifi_ssid = ssid ? ssid.ssid : '';
@@ -52,23 +56,24 @@ export default defineComponent({
       emit('next-page');
     };
 
-    const accessPoinst = (answer) => {
-      answer.value = false;
+    const accessPoinst = () => {
       GetAccessPoints()
         .then((result) => {
-          ssids.value = result;
+          if (result.success) {
+            ssids.value = result.result;
+          } else {
+            ssids.value = [];
+          }
         })
-        .finally(() => {
-          answer.value = true;
+        .catch(() => {
+          ssids.value = [];
         });
     };
 
     onMounted(() => {
-      accessPoinst(answer);
+      accessPoinst();
       setInterval(() => {
-        if (answer.value) {
-          accessPoinst(answer);
-        }
+        accessPoinst();
       }, 3800);
     });
 
@@ -181,5 +186,13 @@ export default defineComponent({
   flex-direction: row;
   align-items: center;
   margin-right: 10px;
+}
+.spin-gtoup {
+  display: flex;
+  justify-content: flex-start;
+}
+.spin-label {
+  margin-left: 10px;
+  color: orange;
 }
 </style>

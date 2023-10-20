@@ -25,6 +25,7 @@ httpClient.interceptors.response.use(
     if (response.status >= 400) {
       const errorMessage = response.data.message ?? response.data ?? response.statusText;
       useToast().error(errorMessage, { timeout: 5000 });
+      // console.log(errorMessage);
       return createErrorResult(
         {
           statusCode: response.status,
@@ -38,6 +39,7 @@ httpClient.interceptors.response.use(
   },
   (error) => {
     // useToast().error(error.message, { timeout: 5000 });
+    console.log(error.message);
     if (!error.response || error.code === 'ECONNABORTED') {
       return Promise.reject(new NetworkError(error.request));
     } else {
