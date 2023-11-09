@@ -23,13 +23,13 @@
         :errors="v$.esp_json_key.$errors"
       />
 
-      <ui-cb-input
+      <!-- <ui-cb-input
         v-model="v$.stm_json_key.$model"
         v-model:checkedValue="useStmOTA"
         label="STM json key"
         placeholder="fw_stm32"
         :errors="v$.stm_json_key.$errors"
-      />
+      /> -->
 
       <ui-select
         v-model="v$.server_auth.$model"
