@@ -8,12 +8,18 @@
 
       <ui-input v-model="v$.server_port.$model" label="Server Port" :errors="v$.server_port.$errors" />
 
-      <ui-input v-model="v$.server_api.$model" label="Server API" :errors="v$.server_api.$errors" />
+      <ui-input
+        v-model="v$.server_api.$model"
+        label="Server API"
+        placeholder="/api/v1/esp32"
+        :errors="v$.server_api.$errors"
+      />
 
       <ui-cb-input
         v-model="v$.esp_json_key.$model"
         v-model:checkedValue="useEspOTA"
         label="ESP json key"
+        placeholder="fw_esp32"
         :errors="v$.esp_json_key.$errors"
       />
 
@@ -21,6 +27,7 @@
         v-model="v$.stm_json_key.$model"
         v-model:checkedValue="useStmOTA"
         label="STM json key"
+        placeholder="fw_stm32"
         :errors="v$.stm_json_key.$errors"
       />
 

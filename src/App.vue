@@ -173,7 +173,7 @@ export default defineComponent({
             Connect().then(({ success, message }) => {
               if (success) {
                 useToast().success('Configuration success!', { timeout: 3000 });
-                step.value = 1;
+                // step.value = 1;
               } else {
                 useToast().error(message, { timeout: 5000 });
               }
