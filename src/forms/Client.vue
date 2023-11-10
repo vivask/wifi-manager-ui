@@ -128,12 +128,12 @@ export default defineComponent({
             () => !useEspOTA.value || (useEspOTA.value && v$.value.esp_json_key.$model.length),
           ),
         },
-        stm_json_key: {
-          required: helpers.withMessage(
-            'Value is required',
-            () => !useStmOTA.value || (useStmOTA.value && v$.value.stm_json_key.$model.length),
-          ),
-        },
+        // stm_json_key: {
+        //   required: helpers.withMessage(
+        //     'Value is required',
+        //     () => !useStmOTA.value || (useStmOTA.value && v$.value.stm_json_key.$model.length),
+        //   ),
+        // },
       };
 
       if (basic.value) {
